@@ -1,0 +1,9 @@
+.prevSentenceBox {
+  position: absolute;
+  bottom: 0;
+  .prevSentence {
+    &.incorrect {
+      background: red;
+    }
+  }
+}
