@@ -1,10 +1,11 @@
-import React, { ChangeEvent, KeyboardEvent, useState } from 'react'
+import React, { ChangeEvent, KeyboardEvent, useEffect, useState } from 'react'
 import styles from './App.module.scss'
 import sentenceRaw from './assets/thai-sentences.txt?raw'
 import { PrevSentence } from './classes/PrevSentence'
 import PrevSentenceDisplay from './components/PrevSentenceDisplay/PrevSentenceDisplay'
 import SentenceDisplay from './components/SentenceDisplay/SentenceDisplay'
 import SentenceInput from './components/SentenceInput/SentenceInput'
+import TypeSpeedGraph from './components/TypeSpeedGraph/TypeSpeedGraph'
 
 const sentencesArray = sentenceRaw
   .split('\n')
@@ -18,6 +19,8 @@ function App() {
   const [hasIncorrect, setHasIncorrect] = useState(false)
 
   const [prevSentence, setPrevSentence] = useState<PrevSentence[]>([])
+
+  const [graphData, setGraphData] = useState<{ x: number; y: number }[]>([])
 
   const handleTextInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault()
@@ -41,8 +44,32 @@ function App() {
     }
   }
 
+  let start: number
+  const step = (timestamp: number) => {
+    if (start === undefined) start = timestamp
+    const elapsed = timestamp - start
+    setGraphData((prevData) => [
+      ...prevData,
+      {
+        x: elapsed / 1000,
+        y: 30 + Math.random() * 10,
+      },
+    ])
+
+    if (elapsed < 20000) {
+      window.requestAnimationFrame(step)
+    }
+  }
+
+  useEffect(() => {
+    setTimeout(() => {
+      window.requestAnimationFrame(step)
+    }, 1000)
+  }, [])
+
   return (
     <div className={styles.app}>
+      <TypeSpeedGraph width={500} height={300} data={graphData} />
       <div className={styles.prevSentencePosition}>
         <PrevSentenceDisplay prevSentence={prevSentence} />
       </div>
