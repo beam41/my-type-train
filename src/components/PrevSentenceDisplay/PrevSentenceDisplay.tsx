@@ -1,6 +1,6 @@
+import classNames from 'classNames'
 import PropTypes, { InferProps } from 'prop-types'
 import React from 'react'
-import { PrevSentence } from '../../classes/PrevSentence'
 import styles from './PrevSentenceDisplay.module.scss'
 
 function PrevSentenceDisplay({
@@ -11,14 +11,13 @@ function PrevSentenceDisplay({
       {prevSentence.map((ele) => (
         <div
           key={ele!.sentence}
-          className={[
-            styles.prevSentence,
-            ele!.isIncorrect ? styles.incorrect : '',
-          ].join(' ')}
+          className={classNames(styles.prevSentence, {
+            [styles.incorrect]: ele!.incorrectCount > 0,
+          })}
         >
           <p>{ele!.sentence}</p>
           <p>&#8203;{ele!.inputSentence}</p>
-          <p>{ele!.isIncorrect}</p>
+          <p>{ele!.incorrectCount > 0}</p>
         </div>
       ))}
     </div>
@@ -26,8 +25,13 @@ function PrevSentenceDisplay({
 }
 
 PrevSentenceDisplay.propTypes = {
-  prevSentence: PropTypes.arrayOf(PropTypes.instanceOf(PrevSentence))
-    .isRequired,
+  prevSentence: PropTypes.arrayOf(
+    PropTypes.shape({
+      sentence: PropTypes.string.isRequired,
+      inputSentence: PropTypes.string.isRequired,
+      incorrectCount: PropTypes.number.isRequired,
+    })
+  ).isRequired,
 }
 
 export default PrevSentenceDisplay

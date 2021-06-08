@@ -1,3 +1,5 @@
-.incorrect {
-  background-color: red;
+.inputBox {
+  &.incorrect {
+    background-color: red;
+  }
 }
