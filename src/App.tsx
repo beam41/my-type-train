@@ -1,6 +1,7 @@
 import React, { ChangeEvent, KeyboardEvent, useRef, useState } from 'react'
 import styles from './App.module.scss'
 import sentenceRaw from './assets/thai-sentences.txt?raw'
+import InfoDashboard from './components/InfoDashboard/InfoDashboard'
 import PrevSentenceDisplay from './components/PrevSentenceDisplay/PrevSentenceDisplay'
 import SentenceDisplay from './components/SentenceDisplay/SentenceDisplay'
 import SentenceInput from './components/SentenceInput/SentenceInput'
@@ -29,6 +30,8 @@ function countIncorrect(baseSentence: string, compareSentence: string) {
   return ic
 }
 
+const testTimeLength = 60000
+
 function App() {
   const [sentenceIndex, setSentenceIndex] = useState(0)
 
@@ -46,38 +49,42 @@ function App() {
 
   const [elapsed, setElapsed] = useState(0)
 
-  const [start, setStart] = useState(false)
+  const [started, setStarted] = useState(false)
 
   const [ended, setEnded] = useState(false)
 
   const bkspPress = useRef(false)
 
-  const textInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const textInputChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    const inp = event.target.value.replace('\n', '')
+
+    if (inp.length === textInput.length) return
+
     // prevent selection delete
-    if (Math.abs(event.target.value.length - textInput.length) > 1) {
+    if (Math.abs(inp.length - textInput.length) > 1) {
       if (bkspPress.current) {
         setTextInput((prev) => prev.slice(0, -1))
       } else {
-        setTextInput((prev) => prev + event.target.value)
+        setTextInput((prev) => prev + inp)
       }
       return
     }
 
-    setTextInput(event.target.value)
+    setTextInput(inp)
 
-    if (!start) {
+    if (!started) {
       window.requestAnimationFrame(step)
-      setStart(true)
+      setStarted(true)
     }
 
     setIncorrect(
-      countIncorrect(event.target.value, sentencesArray[sentenceIndex])
+      countIncorrect(inp, sentencesArray[sentenceIndex])
     )
 
-    setTyped((prev) => prev + 1)
+    if (!bkspPress.current) setTyped((prev) => prev + 1)
   }
 
-  const handleKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyPress = (event: KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key !== 'Enter') return
     // prevent submit empty
     if (textInput === '') return
@@ -108,12 +115,12 @@ function App() {
     console.table(prevSentence)
   }
 
-  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key !== 'Backspace') return
     bkspPress.current = true
   }
 
-  const handleKeyUp = (event: KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyUp = (event: KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key !== 'Backspace') return
     bkspPress.current = false
   }
@@ -130,40 +137,27 @@ function App() {
     //   },
     // ])
     setElapsed(_elapsed)
-    if (_elapsed >= 60000) {
+    if (_elapsed >= testTimeLength) {
       setEnded(true)
       return
     }
     window.requestAnimationFrame(step)
   }
 
-  const timeMin = elapsed / 60000
-  const allIncorrect = prevSentenceIncorrect + incorrect
-
-  const cpm = typed / timeMin
-  // gross word per min
-  const gWpm = cpm / 5
-  // net word per min
-  const nWpm = Math.max(0, gWpm - allIncorrect / timeMin)
-
   return (
     <div className={styles.app}>
       <div className={styles.prevSentencePosition}>
         <PrevSentenceDisplay prevSentence={prevSentence} />
       </div>
-      Time {timeMin.toFixed(2)}
-      <br />
-      gross cpm: {cpm.toFixed(2)}
-      <br />
-      gross wpm: {gWpm.toFixed(2)}
-      <br />
-      net wpm: {nWpm.toFixed(2)}
-      <br />
-      incorrect: {incorrect}
-      <br />
-      allIncorrect: {allIncorrect}
-      {/* <TypeSpeedGraph width={500} height={300} data={graphData} /> */}
       <div className={styles.cover}>
+        <InfoDashboard
+          elapsed={elapsed}
+          typed={typed}
+          incorrect={prevSentenceIncorrect + incorrect}
+          testTimeLength={testTimeLength}
+        />
+        {/* <TypeSpeedGraph width={500} height={300} data={graphData} /> */}
+
         <SentenceDisplay sentence={sentencesArray[sentenceIndex]} />
         <SentenceInput
           disabled={ended}
@@ -173,6 +167,7 @@ function App() {
           onKeyPress={handleKeyPress}
           onKeyDown={handleKeyDown}
           onKeyUp={handleKeyUp}
+          started={started}
         />
       </div>
     </div>

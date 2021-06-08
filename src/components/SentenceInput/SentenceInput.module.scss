@@ -1,5 +1,35 @@
-.inputBox {
+@use "../../assets/styles/variable";
+
+.sentenceInput {
+  display: flex;
+  height: variable.$sentence-pair-height;
+  background: rgba(rgb(0, 0, 0), 0.05);
+
   &.incorrect {
-    background-color: red;
+    background-color: rgba(#f00, 0.05);
+  }
+
+  &.disabled {
+    background-color: variable.$border-color !important;
+
+    .inputBox {
+      color: #202020;
+    }
+  }
+
+  .inputBox {
+    box-sizing: border-box;
+    height: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    border-radius: 0;
+    color: white;
+    font-size: variable.$sentence-font-size;
+    width: 100%;
+    padding: 8px 16px;
+    resize: none;
+    font-family: variable.$font-family;
+    line-height: variable.$line-height;
   }
 }

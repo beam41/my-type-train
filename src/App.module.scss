@@ -1,9 +1,17 @@
+@use "./assets/styles/variable";
+
 .app {
   height: 100vh;
   display: grid;
   place-content: center;
   color: white;
+
   .prevSentencePosition {
     position: relative;
+  }
+
+  .cover {
+    width: 700px;
+    border: 1px solid variable.$border-color;
   }
 }

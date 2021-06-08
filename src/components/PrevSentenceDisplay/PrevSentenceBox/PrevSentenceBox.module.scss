@@ -1,0 +1,34 @@
+.prevSentenceBox {
+  background: rgba(#fff, 0.1);
+  padding: 8px;
+
+  &.incorrect {
+    background: rgba(#f00, 0.1);
+  }
+
+  p {
+    margin: 0;
+  }
+
+  .sentence {
+    color: rgba(#fff, 0.5);
+  }
+
+  .inp {
+    color: rgba(#fff, 0.3);
+  }
+
+  &.incorrect {
+    .inp {
+      color: rgba(#f00, 0.4);
+    }
+  }
+
+  &:not(:first-child) {
+    border-top: 1px solid rgba(#fff, 0.2);
+
+    &.incorrect {
+      border-top: 1px solid rgba(#f00, 0.2);
+    }
+  }
+}

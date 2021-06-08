@@ -1,0 +1,12 @@
+@use "../../assets/styles/variable";
+
+.sentenceDisplay {
+  display: flex;
+  align-items: flex-end;
+  box-sizing: border-box;
+  height: variable.$sentence-pair-height;
+  padding: 8px 16px;
+  font-size: variable.$sentence-font-size;
+  border-bottom: 1px solid variable.$border-color;
+  line-height: variable.$line-height;
+}

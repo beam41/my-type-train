@@ -1,0 +1,25 @@
+@use "../../assets/styles/variable";
+
+.infoDashboard {
+  border-bottom: 1px solid variable.$border-color;
+
+  .dashboardRow {
+    display: flex;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid variable.$border-color;
+    }
+
+    & > div {
+      flex: 1;
+
+      &:not(:last-child) {
+        border-right: 1px solid variable.$border-color;
+      }
+    }
+  }
+
+  .incorrect {
+    color: rgba(#f00, 0.85);
+  }
+}

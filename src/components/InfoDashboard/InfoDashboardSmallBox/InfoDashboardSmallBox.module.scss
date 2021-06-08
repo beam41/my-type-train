@@ -1,0 +1,13 @@
+.infoDashboardSmallBox {
+  font-family: monospace;
+  .label {
+    padding: 4px;
+    font-size: 0.6rem;
+  }
+  .children {
+    display: grid;
+    place-items: center;
+    font-size: 1.5rem;
+    padding: 8px 0;
+  }
+}

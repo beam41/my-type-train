@@ -1,24 +1,16 @@
-import classNames from 'classNames'
 import PropTypes, { InferProps } from 'prop-types'
 import React from 'react'
+import PrevSentenceBox from './PrevSentenceBox/PrevSentenceBox'
 import styles from './PrevSentenceDisplay.module.scss'
 
 function PrevSentenceDisplay({
   prevSentence,
 }: InferProps<typeof PrevSentenceDisplay.propTypes>) {
   return (
-    <div className={styles.prevSentenceBox}>
+    <div className={styles.prevSentenceDisplay}>
+      <div className={styles.shadow}></div>
       {prevSentence.map((ele) => (
-        <div
-          key={ele!.sentence}
-          className={classNames(styles.prevSentence, {
-            [styles.incorrect]: ele!.incorrectCount > 0,
-          })}
-        >
-          <p>{ele!.sentence}</p>
-          <p>&#8203;{ele!.inputSentence}</p>
-          <p>{ele!.incorrectCount > 0}</p>
-        </div>
+        <PrevSentenceBox key={ele!.sentence} prevSentence={ele} />
       ))}
     </div>
   )
