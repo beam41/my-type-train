@@ -36,7 +36,7 @@ function App() {
 
   const [incorrect, setIncorrect] = useState(0)
 
-  const [prevWordIncorrect, setPrevWordIncorrect] = useState(0)
+  const [prevSentenceIncorrect, setPrevSentenceIncorrect] = useState(0)
 
   const [prevSentence, setPrevSentence] = useState<PrevSentence[]>([])
 
@@ -84,7 +84,7 @@ function App() {
 
     event.preventDefault()
 
-    setPrevWordIncorrect(
+    setPrevSentenceIncorrect(
       (prev) =>
         prev +
         Math.max(
@@ -138,7 +138,7 @@ function App() {
   }
 
   const timeMin = elapsed / 60000
-  const allIncorrect = prevWordIncorrect + incorrect
+  const allIncorrect = prevSentenceIncorrect + incorrect
 
   const cpm = typed / timeMin
   // gross word per min
