@@ -18,18 +18,15 @@ function InfoDashboard({
   // net word per min
   const nWpm = Math.max(0, gWpm - incorrect / timeMin)
 
-  const elap = Math.max(0, (testTimeLength - elapsed) / 1000)
+  const elapMsec = Math.max(0, testTimeLength - elapsed)
+  const elap = elapMsec / 1000
   const elapDispMin = Math.trunc(elap / 60)
   const elapDispSec = Math.trunc(elap % 60)
 
-  let tl: string
-  if (elapDispMin > 0) {
-    let t = `${elapDispMin}m `
-    if (elapDispSec > 0) t += `${elapDispSec}s`
-    tl = t
-  } else {
-    tl = `${elapDispSec}s`
-  }
+  let tl: string = ''
+  if (elapDispMin > 0) tl += `${elapDispMin}m `
+  if (elapDispSec > 0) tl += `${elapDispSec}s`
+  if (elap < 1) tl += `${Math.trunc(elapMsec % 1000)}ms`
 
   return (
     <div className={styles.infoDashboard}>
