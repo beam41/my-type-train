@@ -64,6 +64,9 @@ function App() {
 
     if (inp.length === textInput.length) return
 
+    if (!bkspPress.current) setTyped((prev) => prev + 1)
+    else setTyped((prev) => prev - 1)
+
     // prevent selection delete
     if (Math.abs(inp.length - textInput.length) > 1) {
       if (bkspPress.current) {
@@ -83,7 +86,7 @@ function App() {
 
     setIncorrect(countIncorrect(inp, sentencesArray[sentenceIndex]))
 
-    if (!bkspPress.current) setTyped((prev) => prev + 1)
+
   }
 
   const handleKeyPress = (event: KeyboardEvent<HTMLTextAreaElement>) => {

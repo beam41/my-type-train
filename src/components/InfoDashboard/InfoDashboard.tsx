@@ -35,6 +35,7 @@ function InfoDashboard({
     <div className={styles.infoDashboard}>
       <div className={styles.dashboardRow}>
         <InfoDashboardSmallBox label="Time Left">{tl}</InfoDashboardSmallBox>
+        <InfoDashboardSmallBox label="Typed">{typed}</InfoDashboardSmallBox>
         <InfoDashboardSmallBox label="Incorrect">
           <span
             className={classNames(styles.incorectCount, {
