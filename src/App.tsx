@@ -3,8 +3,10 @@ import styles from './App.module.scss'
 import sentenceRaw from './assets/thai-sentences.txt?raw'
 import InfoDashboard from './components/InfoDashboard/InfoDashboard'
 import PrevSentenceDisplay from './components/PrevSentenceDisplay/PrevSentenceDisplay'
+import ResetButton from './components/ResetButton/ResetButton'
 import SentenceDisplay from './components/SentenceDisplay/SentenceDisplay'
 import SentenceInput from './components/SentenceInput/SentenceInput'
+import TimeSelector from './components/TimeSelector/TimeSelector'
 import { PrevSentence } from './interfaces/PrevSentence'
 
 const sentencesArray = sentenceRaw
@@ -30,8 +32,6 @@ function countIncorrect(baseSentence: string, compareSentence: string) {
   return ic
 }
 
-const testTimeLength = 60000
-
 function App() {
   const [sentenceIndex, setSentenceIndex] = useState(0)
 
@@ -52,6 +52,10 @@ function App() {
   const [started, setStarted] = useState(false)
 
   const [ended, setEnded] = useState(false)
+
+  const testTimeLengthTemp = useRef(60000)
+
+  const [testTimeLength, setTestTimeLength] = useState(60000)
 
   const bkspPress = useRef(false)
 
@@ -77,9 +81,7 @@ function App() {
       setStarted(true)
     }
 
-    setIncorrect(
-      countIncorrect(inp, sentencesArray[sentenceIndex])
-    )
+    setIncorrect(countIncorrect(inp, sentencesArray[sentenceIndex]))
 
     if (!bkspPress.current) setTyped((prev) => prev + 1)
   }
@@ -110,6 +112,9 @@ function App() {
 
     setIncorrect(0)
     setSentenceIndex((prev) => prev + 1)
+    if (sentenceIndex >= sentencesArray.length - 1) {
+      setEnded(true)
+    }
     setTextInput('')
 
     console.table(prevSentence)
@@ -137,16 +142,44 @@ function App() {
     //   },
     // ])
     setElapsed(_elapsed)
-    if (_elapsed >= testTimeLength) {
+
+    let end = false
+    // simply using ended doesn't work lol
+    setEnded((prev) => {
+      end = prev
+      return prev
+    })
+    if (_elapsed >= testTimeLengthTemp.current || end) {
       setEnded(true)
       return
     }
     window.requestAnimationFrame(step)
   }
 
+  const setTestTime = (time: number) => {
+    testTimeLengthTemp.current = time * 1000
+    setTestTimeLength(testTimeLengthTemp.current)
+  }
+
+  const reset = () => {
+    setSentenceIndex(0)
+    setTextInput('')
+    setIncorrect(0)
+    setPrevSentenceIncorrect(0)
+    setPrevSentence([])
+    setGraphData([])
+    setTyped(0)
+    setElapsed(0)
+    setStarted(false)
+    setEnded(false)
+    setTestTimeLength(testTimeLengthTemp.current)
+    startTime.current = undefined
+  }
+
   return (
     <div className={styles.app}>
-      <div className={styles.prevSentencePosition}>
+      <div className={styles.absolutePosition}>
+        <TimeSelector onChange={setTestTime} hidden={started} />
         <PrevSentenceDisplay prevSentence={prevSentence} />
       </div>
       <div className={styles.cover}>
@@ -158,7 +191,7 @@ function App() {
         />
         {/* <TypeSpeedGraph width={500} height={300} data={graphData} /> */}
 
-        <SentenceDisplay sentence={sentencesArray[sentenceIndex]} />
+        <SentenceDisplay sentence={sentencesArray[sentenceIndex] ?? ''} />
         <SentenceInput
           disabled={ended}
           textInput={textInput}
@@ -169,6 +202,9 @@ function App() {
           onKeyUp={handleKeyUp}
           started={started}
         />
+      </div>
+      <div className={styles.absolutePosition}>
+        <ResetButton onClick={reset} hidden={!ended} />
       </div>
     </div>
   )

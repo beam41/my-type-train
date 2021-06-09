@@ -19,7 +19,11 @@
     }
   }
 
-  .incorrect {
-    color: rgba(#f00, 0.85);
+  .incorectCount {
+    transition: all 0.1s;
+
+    &.incorrect {
+      color: #b71c1c;
+    }
   }
 }

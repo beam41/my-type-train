@@ -1,0 +1,30 @@
+.resetButton {
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  height: 50px;
+  color: #444444;
+  background: #e53935;
+  font: {
+    size: 1.5rem;
+    family: inherit;
+  }
+  border: 1px solid #444444;
+  border-top: none;
+  border-radius: 0;
+  user-select: none;
+  opacity: 1;
+  transition: all 0.2s;
+  visibility: visible;
+
+
+  &:hover {
+    background: #f44336;
+  }
+
+  &.hidden {
+    opacity: 0;
+    visibility: hidden;
+    height: 0px;
+  }
+}

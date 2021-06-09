@@ -18,14 +18,29 @@ function InfoDashboard({
   // net word per min
   const nWpm = Math.max(0, gWpm - incorrect / timeMin)
 
+  const elap = Math.max(0, (testTimeLength - elapsed) / 1000)
+  const elapDispMin = Math.trunc(elap / 60)
+  const elapDispSec = Math.trunc(elap % 60)
+
+  let tl: string
+  if (elapDispMin > 0) {
+    let t = `${elapDispMin}m `
+    if (elapDispSec > 0) t += `${elapDispSec}s`
+    tl = t
+  } else {
+    tl = `${elapDispSec}s`
+  }
+
   return (
     <div className={styles.infoDashboard}>
       <div className={styles.dashboardRow}>
-        <InfoDashboardSmallBox label="Time Left">
-          {Math.max(0, (testTimeLength - elapsed) / 1000).toFixed(0)}
-        </InfoDashboardSmallBox>
+        <InfoDashboardSmallBox label="Time Left">{tl}</InfoDashboardSmallBox>
         <InfoDashboardSmallBox label="Incorrect">
-          <span className={classNames({ [styles.incorrect]: incorrect > 0 })}>
+          <span
+            className={classNames(styles.incorectCount, {
+              [styles.incorrect]: incorrect > 0,
+            })}
+          >
             {incorrect}
           </span>
         </InfoDashboardSmallBox>

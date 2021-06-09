@@ -4,9 +4,10 @@
   display: flex;
   height: variable.$sentence-pair-height;
   background: rgba(rgb(0, 0, 0), 0.05);
+  transition: all 0.1s;
 
   &.incorrect {
-    background-color: rgba(#f00, 0.05);
+    background-color: rgba(#f44336, 0.1);
   }
 
   &.disabled {

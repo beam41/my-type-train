@@ -1,0 +1,34 @@
+.timeSelector {
+  position: absolute;
+  left: -1.7rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  opacity: 1;
+  transition: all 0.2s;
+  visibility: visible;
+
+  .timeSelectorTime {
+    font-size: 0.9rem;
+    margin: 8px 0;
+    color: rgb(143, 143, 143);
+    cursor: pointer;
+    font-weight: bold;
+    user-select: none;
+    transition: all 0.2s;
+
+    &:hover {
+      color: rgb(194, 194, 194);
+    }
+
+    &.selected {
+      color: rgb(219, 219, 219);
+    }
+  }
+
+  &.hidden {
+    opacity: 0;
+    visibility: hidden;
+    left: -1.3rem;
+  }
+}

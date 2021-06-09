@@ -1,9 +1,14 @@
+@use "../../../assets/styles/variable";
+
 .prevSentenceBox {
   background: rgba(#fff, 0.1);
   padding: 8px;
+  border-left: 1px solid variable.$border-color;
+  border-right: 1px solid variable.$border-color;
+  border-top: 1px solid variable.$border-color;
 
   &.incorrect {
-    background: rgba(#f00, 0.1);
+    background: rgba(#f44336, 0.1);
   }
 
   p {
@@ -20,15 +25,7 @@
 
   &.incorrect {
     .inp {
-      color: rgba(#f00, 0.4);
-    }
-  }
-
-  &:not(:first-child) {
-    border-top: 1px solid rgba(#fff, 0.2);
-
-    &.incorrect {
-      border-top: 1px solid rgba(#f00, 0.2);
+      color: rgba(#f44336, 0.4);
     }
   }
 }
