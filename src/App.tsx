@@ -43,9 +43,13 @@ function App() {
 
   const [prevSentence, setPrevSentence] = useState<PrevSentence[]>([])
 
-  const [graphData, setGraphData] = useState<{ x: number; y: number }[]>([])
+  // const [graphData, setGraphData] = useState<{ x: number; y: number }[]>([])
 
   const [typed, setTyped] = useState(0)
+
+  const [allTyped, setAllTyped] = useState(0)
+
+  const [allMissed, setAllMissed] = useState(0)
 
   const [elapsed, setElapsed] = useState(0)
 
@@ -64,35 +68,50 @@ function App() {
 
     if (inp.length === textInput.length) return
 
-    if (!bkspPress.current) setTyped((prev) => prev + 1)
-    else setTyped((prev) => prev - 1)
-
+    let nt: string;
     // prevent selection delete
     if (Math.abs(inp.length - textInput.length) > 1) {
       if (bkspPress.current) {
-        setTextInput((prev) => prev.slice(0, -1))
+        nt = textInput.slice(0, -1)
+
+        setTyped((prev) => prev - 1)
       } else {
-        setTextInput((prev) => prev + inp)
+        nt = textInput + inp
+
+        setTyped((prev) => prev + 1)
+        setAllTyped((prev) => prev + 1)
       }
-      return
+      setTextInput(nt)
+    } else {
+      if (textInput.length < inp.length) {
+        setTyped((prev) => prev + 1)
+        setAllTyped((prev) => prev + 1)
+      } else {
+        setTyped((prev) => prev - 1)
+      }
+
+      setTextInput(inp)
+
+      if (!started) {
+        window.requestAnimationFrame(step)
+        setStarted(true)
+      }
+
+      nt = inp
     }
-
-    setTextInput(inp)
-
-    if (!started) {
-      window.requestAnimationFrame(step)
-      setStarted(true)
-    }
-
-    setIncorrect(countIncorrect(inp, sentencesArray[sentenceIndex]))
-
-
+    const currIncorrect = countIncorrect(nt, sentencesArray[sentenceIndex])
+    if (currIncorrect > incorrect) setAllMissed(prev => prev+1)
+    setIncorrect(currIncorrect)
   }
 
   const handleKeyPress = (event: KeyboardEvent<HTMLTextAreaElement>) => {
-    if (event.key !== 'Enter') return
-    // prevent submit empty
-    if (textInput === '') return
+    if (
+      event.key !== 'Enter' ||
+      textInput === '' ||
+      sentencesArray[sentenceIndex].length !== textInput.length
+    ) {
+      return
+    }
 
     event.preventDefault()
 
@@ -108,7 +127,7 @@ function App() {
       ...prevSentence,
       {
         sentence: sentencesArray[sentenceIndex],
-        inputSentence: textInput,
+        inputSentence: textInput.replaceAll(' ', '\xa0'),
         incorrectCount: incorrect,
       },
     ])
@@ -170,8 +189,10 @@ function App() {
     setIncorrect(0)
     setPrevSentenceIncorrect(0)
     setPrevSentence([])
-    setGraphData([])
+    // setGraphData([])
     setTyped(0)
+    setAllTyped(0)
+    setAllMissed(0)
     setElapsed(0)
     setStarted(false)
     setEnded(false)
@@ -191,6 +212,7 @@ function App() {
           typed={typed}
           incorrect={prevSentenceIncorrect + incorrect}
           testTimeLength={testTimeLength}
+          accuracy={(allTyped - allMissed) / allTyped}
         />
         {/* <TypeSpeedGraph width={500} height={300} data={graphData} /> */}
 
@@ -207,6 +229,7 @@ function App() {
         />
       </div>
       <div className={styles.absolutePosition}>
+        <div className={styles.lengthDisplay}>{textInput.length}/{sentencesArray[sentenceIndex].length}</div>
         <ResetButton onClick={reset} hidden={!ended} />
       </div>
     </div>

@@ -9,6 +9,7 @@ function InfoDashboard({
   typed,
   incorrect,
   testTimeLength,
+  accuracy,
 }: InferProps<typeof InfoDashboard.propTypes>) {
   const timeMin = elapsed / 60000
 
@@ -42,6 +43,9 @@ function InfoDashboard({
             {incorrect}
           </span>
         </InfoDashboardSmallBox>
+        <InfoDashboardSmallBox label="Accuracy">
+          {!isNaN(accuracy) ? Math.round(accuracy * 100) : 100}%
+        </InfoDashboardSmallBox>
       </div>
       <div className={styles.dashboardRow}>
         <InfoDashboardSmallBox label="Gross CPM">
@@ -63,6 +67,7 @@ InfoDashboard.propTypes = {
   typed: PropTypes.number.isRequired,
   incorrect: PropTypes.number.isRequired,
   testTimeLength: PropTypes.number.isRequired,
+  accuracy: PropTypes.number.isRequired,
 }
 
 export default InfoDashboard
